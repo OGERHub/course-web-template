@@ -1,0 +1,34 @@
+# site-config.yaml — Projektkonfiguration für Quarto-Kurswebsite
+# Fülle in Ruhe aus; das Setup-Script fragt nur leere Felder nach.
+
+# --- Basis ---
+site_title: "your title"
+org_name: "your organisation"
+site_url: "https://your-github-name.github.io/your-repo"
+repo_url: "https://github.com/your-github-name/your-repo"
+logo_path: "images/your-logo.png"
+
+# Navbar rechts
+portal_text: "Interne Lernplattform"
+portal_url: "https://www.ilias.uni-koeln.de/ilias/login.php?client_id=uk&cmd=force_login&lang=de"
+
+# Footer / Impressum-Link im Footer
+impressum_href: "#"
+
+# --- Branding ---
+brand_hex: "#FB7171"          # Light
+brand_hex_dark: ""            # optional (leer = wie Light)
+brand_font: "system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif"
+dark_theme: "yes"             # "yes" oder "no"
+
+# --- Impressum / Datenschutz ---
+responsible_name: ""          # z. B. "Prof. Dr. …"
+responsible_address: "<br />" # HTML-Zeilenumbruch mit <br />
+responsible_email: ""
+uni_name: ""
+uni_url: ""
+institute_name: ""
+institute_url: ""
+chair_name: ""
+chair_url: ""
+imprint_url: ""               # offizielles Uni-Impressum

@@ -1,0 +1,188 @@
+[01;34m.[0m
+├── [01;34mbase[0m
+│   ├── about.qmd
+│   ├── faq.qmd
+│   └── impressum.qmd
+├── course-web-template.Rproj
+├── [01;34mcss[0m
+│   ├── custom.scss
+│   ├── styles.css
+│   └── theme-dark.scss
+├── [01;34m_extensions[0m
+│   ├── [01;34mquarto-journals[0m
+│   │   ├── [01;34macm[0m
+│   │   ├── [01;34macs[0m
+│   │   ├── [01;34magu[0m
+│   │   ├── [01;34melsevier[0m
+│   │   ├── [01;34mjasa[0m
+│   │   ├── [01;34mjss[0m
+│   │   └── [01;34mplos[0m
+│   └── [01;34myour-org[0m
+│       └── [01;34mcourse-web[0m
+├── _extension.yml
+├── _footer-year.html
+├── [01;34mimages[0m
+│   ├── [01;35m1password-logo.svg[0m
+│   ├── [01;35mAdam-Savage-Quotes-3.jpg[0m
+│   ├── [01;35marrow-circle-hover.svg[0m
+│   ├── [01;35marrow-circle.svg[0m
+│   ├── [01;35marrow.svg[0m
+│   ├── [01;35mbanner.png[0m
+│   ├── [01;35mbayern-religion2-sp.jpg[0m
+│   ├── [01;35mbayern-religion2-sp.jpg.jpg[0m
+│   ├── [01;35mbayern-religion-sp.jpg[0m
+│   ├── [01;35mbayern-umweltschutz-sp.jpg[0m
+│   ├── [01;35mbottom-avatars.png[0m
+│   ├── [01;35mcalendart.svg[0m
+│   ├── [01;35mcalibration-sp.jpg[0m
+│   ├── [01;35mchevrondown.svg[0m
+│   ├── [01;35mChevronup.svg[0m
+│   ├── [01;35mcircles.svg[0m
+│   ├── [01;35mclimatroof-sp.2.jpg[0m
+│   ├── [01;35mclimatroof-sp.jpg[0m
+│   ├── [01;35mclose-info.svg[0m
+│   ├── [01;34mcommunity[0m
+│   │   ├── [01;35mcall.svg[0m
+│   │   ├── [01;35mdiscuss.svg[0m
+│   │   └── [01;35mevents.svg[0m
+│   ├── [01;35mcommunity-img.png[0m
+│   ├── [01;35mcommunity.png[0m
+│   ├── [01;35mcubes-large.svg[0m
+│   ├── [01;35mcubes.svg[0m
+│   ├── [01;35mdanger.png[0m
+│   ├── [01;35mdiffusion-sp.png[0m
+│   ├── [01;35mdiscuss.svg[0m
+│   ├── [01;35mdivider-lg.svg[0m
+│   ├── [01;35mdivider-lr.svg[0m
+│   ├── [01;35mdivider-rl-sm.svg[0m
+│   ├── [01;35mdivider-rl.svg[0m
+│   ├── [01;35mdoingscience-sp.jpg[0m
+│   ├── [01;35menvimet.png[0m
+│   ├── [01;35mevent.svg[0m
+│   ├── [01;35mexternal-link.svg[0m
+│   ├── [01;35mfa-arrow.svg[0m
+│   ├── [01;35mfacebook-share.svg[0m
+│   ├── [01;35mface-sp.jpg[0m
+│   ├── [01;35mfinal2-sp.jpg[0m
+│   ├── [01;35mfinale-sp.jpg[0m
+│   ├── [01;35mfire.png[0m
+│   ├── [01;35mfooter-cube-mb.svg[0m
+│   ├── [01;35mfooter-cube.svg[0m
+│   ├── [01;35mfooter-divider.svg[0m
+│   ├── [01;35mforest-sp.jpg[0m
+│   ├── [01;35mfreiraeume-sp.jpg[0m
+│   ├── [01;35mfroggit_1.jpg[0m
+│   ├── [01;35mfroggit_base_1.jpg[0m
+│   ├── [01;35mginfo.png[0m
+│   ├── [01;35mgisma-11.jpg[0m
+│   ├── [01;35mgisma-14.jpg[0m
+│   ├── [01;35mgisma-15.jpg[0m
+│   ├── [01;35mgisma-1.jpg[0m
+│   ├── [01;35mgisma-1s.jpg[0m
+│   ├── [01;35mgisma-20.jpg[0m
+│   ├── [01;32mgisma-30.jpg[0m
+│   ├── [01;32mgisma-31.jpg[0m
+│   ├── [01;35mgisma.jpg[0m
+│   ├── [01;35mgithub-logo.svg[0m
+│   ├── [01;35mgithub-Rstudio.jpg[0m
+│   ├── [01;35mgrubenwiese2-sp.jpg[0m
+│   ├── [01;35mgrubenwiese-rb-sp.jpg[0m
+│   ├── [01;35mgrubenwiese-sp.jpg[0m
+│   ├── [01;35mhead-assign.jpg[0m
+│   ├── [01;35mheader-cat2.jpg[0m
+│   ├── [01;35mHeaderIcon.svg[0m
+│   ├── [01;35mheader.jpg[0m
+│   ├── [01;35mhead-faq.jpg[0m
+│   ├── [01;35mhead-science.jpg[0m
+│   ├── [01;35mhinterland-sp.jpg[0m
+│   ├── [01;35mice-bahnfof.jpg[0m
+│   ├── [01;35micon-menu.svg[0m
+│   ├── [01;35micon-right-chevron.svg[0m
+│   ├── [01;35minfo.png[0m
+│   ├── [01;35mjoin-img.svg[0m
+│   ├── [01;35mlogin-sp.jpg[0m
+│   ├── [01;35mlogo-dark.svg[0m
+│   ├── [01;35mlogo.jpg[0m
+│   ├── [01;35mlogo-light.svg[0m
+│   ├── [01;35mlogooil.jpg[0m
+│   ├── [01;35mLV-uav-workflow.jpg[0m
+│   ├── [01;35mmod.png[0m
+│   ├── [01;35mmof.jpg[0m
+│   ├── [01;35mmof.png[0m
+│   ├── [01;35mmore-info.svg[0m
+│   ├── [01;35mnasa.svg[0m
+│   ├── [01;35mnavbar-divider.svg[0m
+│   ├── [01;35mnicaraguamof-sp.jpg[0m
+│   ├── [01;35mnotebook.jpg[0m
+│   ├── [01;35mok.png[0m
+│   ├── [01;35mpackage-badge.svg[0m
+│   ├── [01;35mpackage-icon.svg[0m
+│   ├── [01;35mpack-cube.svg[0m
+│   ├── [01;35mpag-arr.svg[0m
+│   ├── [01;35mpathes-sp.jpg[0m
+│   ├── [01;35mpic07.jpg[0m
+│   ├── [01;35mquestion.png[0m
+│   ├── [01;35mr-arrow.svg[0m
+│   ├── [01;35mrestefond-sp.jpg[0m
+│   ├── [01;35msard-sp.png[0m
+│   ├── [01;35msearch-icon.svg[0m
+│   ├── [01;34msocial-icons[0m
+│   │   ├── [01;35mel.svg[0m
+│   │   ├── [01;35mgithub.svg[0m
+│   │   ├── [01;35mtwitter.svg[0m
+│   │   └── [01;35mvimeo.svg[0m
+│   ├── [01;34msoftware-review[0m
+│   │   ├── [01;35mdiscuss.svg[0m
+│   │   ├── [01;35mguidance.svg[0m
+│   │   └── [01;35mopen-review.svg[0m
+│   ├── [01;35mso-logo.svg[0m
+│   ├── [01;34msvg[0m
+│   │   ├── [01;34mbrands[0m
+│   │   ├── [01;34mcommunity[0m
+│   │   ├── [01;35mlinkedin-share.svg[0m
+│   │   ├── [01;35mlink.svg[0m
+│   │   ├── [01;34msocial-icons[0m
+│   │   └── [01;34msoftware-review[0m
+│   ├── [01;35msysdyn.png[0m
+│   ├── [01;35mtest.png[0m
+│   ├── [01;35mtoparr.svg[0m
+│   ├── [01;35mtop-avatars.png[0m
+│   ├── [01;35mtwitter-share.svg[0m
+│   ├── [01;35mtwitter.svg[0m
+│   ├── [01;35muav1-sp.jpg[0m
+│   ├── [01;35muav2-sp.jpg[0m
+│   ├── [01;34musers[0m
+│   │   ├── [01;35mgithub.svg[0m
+│   │   └── [01;35mrss.svg[0m
+│   ├── [01;34mvolunteer[0m
+│   │   ├── [01;35mpeep10.png[0m
+│   │   ├── [01;35mpeep1.png[0m
+│   │   ├── [01;35mpeep2.png[0m
+│   │   ├── [01;35mpeep3.png[0m
+│   │   ├── [01;35mpeep4.png[0m
+│   │   ├── [01;35mpeep5.png[0m
+│   │   ├── [01;35mpeep6.png[0m
+│   │   ├── [01;35mpeep7.png[0m
+│   │   ├── [01;35mpeep8.png[0m
+│   │   └── [01;35mpeep9.png[0m
+│   ├── [01;35mvolunteer-cubes.svg[0m
+│   ├── [01;35mwave-sp.png[0m
+│   ├── [01;35mwhereto.png[0m
+│   └── [01;35mworking-environment.png[0m
+├── index.qmd
+├── _quarto-ci.yml
+├── _quarto.yml
+├── README.md
+├── repo-tree.txt
+├── [01;34mscripts[0m
+│   └── configure.py
+├── [01;34msession-1[0m
+│   └── sitzung-1-01.qmd
+├── [01;34msession-2[0m
+│   ├── bibunit02-01.bib
+│   ├── sitzung-2-01.qmd
+│   └── sitzung-2-02.qmd
+├── site-config.yml
+└── template.yml
+
+28 directories, 158 files
