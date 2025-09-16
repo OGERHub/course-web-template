@@ -1,7 +1,10 @@
 # site-config.yaml — Projektkonfiguration für Quarto-Kurswebsite
 # Fülle in Ruhe aus; das Setup-Script fragt nur leere Felder nach.
 
-# --- Basis ---
+
+# --- Kurs Infos
+course_code: "KURS-123"
+contact_email: "name@uni.de"
 site_title: "your title"
 org_name: "your organisation"
 site_url: "https://your-github-name.github.io/your-repo"
@@ -40,5 +43,4 @@ institute_url: ""
 chair_name: ""
 chair_url: ""
 imprint_url: ""               # offizielles Uni-Impressum
-course_code: "KURS-123"
-contact_email: "name@uni.de"
+
