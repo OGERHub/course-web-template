@@ -1,0 +1,128 @@
+name: your-org/course-web
+title: "Course Website"
+description: "Quarto Kurs-Website mit Prompts für Titel/Orga/URLs/Logo + Light/Dark-Branding"
+
+files:
+  - _quarto.yml
+  - index.qmd
+  - base/about.qmd
+  - base/faq.qmd
+  - base/impressum.qmd
+  - css/custom.scss
+  - css/theme-dark.scss
+  - css/styles.css
+  - _footer-year.html
+  - .github/workflows/quarto-pages.yml
+  - README.md
+  - .gitignore
+  - _footer-year.html
+
+variables:
+  # Basis
+  site_title:
+    prompt: "Website-Titel"
+    default: "your title"
+  org_name:
+    prompt: "Organisation (Footer)"
+    default: "your organisation"
+  site_url:
+    prompt: "Site-URL (https://user.github.io/repo)"
+    default: "https://your-github-name.github.io/your-repo"
+  repo_url:
+    prompt: "GitHub-Repo-URL"
+    default: "https://github.com/your-github-name/your-repo"
+  logo_path:
+    prompt: "Logo-Pfad (relativ, z.B. images/logo.png)"
+    default: "images/your-logo.png"
+  portal_text:
+    prompt: "Navbar rechts: Link-Text"
+    default: "Interne Lernplattform"
+  portal_url:
+    prompt: "Navbar rechts: URL"
+    default: "https://www.ilias.uni-koeln.de/ilias/login.php?client_id=uk&cmd=force_login&lang=de"
+  impressum_href:
+    prompt: "Footer: Impressum-Link (href)"
+    default: "#"
+
+  # Branding (Light + optional Dark)
+  brand_hex:
+    prompt: "Markenfarbe Light (HEX)"
+    default: "#FB7171"
+  brand_hex_dark:
+    prompt: "Markenfarbe Dark (HEX, leer = wie Light)"
+    default: ""
+  brand_font:
+    prompt: "Primär-Schriftfamilie (CSS)"
+    default: "system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif"
+
+  # Dark-Theme Umschalter (steuert eine Zeile in _quarto.yml)
+  dark_theme:
+    prompt: "Dark-Theme aktivieren?"
+    choices: ["yes", "no"]
+    default: "yes"
+  # Impressum
+  responsible_name:
+    prompt: "Verantwortliche Person (Name, Titel)"
+    default: ""
+
+  responsible_address:
+    prompt: "Verantwortliche Adresse"
+    default: "<br />"
+
+  responsible_email:
+    prompt: "E-Mail-Adresse"
+    default: ""
+
+  uni_name:
+    prompt: "Universität (z. B. Marburg University, Germany)"
+    default: ""
+
+  uni_url:
+    prompt: "URL der Universität"
+    default: ""
+
+  institute_name:
+    prompt: "Institut"
+    default: ""
+
+  institute_url:
+    prompt: "Institut-URL"
+    default: ""
+
+  chair_name:
+    prompt: "AG"
+    default: ""
+
+  chair_url:
+    prompt: "AG-URL"
+    default: ""
+
+  imprint_url:
+    prompt: "URL offizielles Uni-Impressum"
+    default: ""
+
+replace:
+  # ==== _quarto.yml: exakte Ersetzungen gegen deine Vorlage ====
+  - files: ["_quarto.yml"]
+    replace:
+      'title: "your title"': 'title: "{{site_title}}"'
+      'site-url: https://your-github-name.github.io/your-repo': 'site-url: {{site_url}}'
+      'repo-url: https://github.com/your-github-name/your-repo': 'repo-url: {{repo_url}}'
+      'logo: images/your-logo.png': 'logo: {{logo_path}}'
+      'text: Interne Lernplattform': 'text: {{portal_text}}'
+      'href: https://www.ilias.uni-koeln.de/ilias/login.php?client_id=uk&cmd=force_login&lang=de': 'href: {{portal_url}}'
+      'your organisation (<span class="year"></span>) —': '{{org_name}} (<span class="year"></span>) —'
+      '<a class="impressum-link" href="#">Impressum</a>': '<a class="impressum-link" href="{{impressum_href}}">Impressum</a>'
+      # Dark-Theme-Zeile (Platzhalter wird unten in _quarto.yml eingefügt)
+      '__DARK_THEME_LINE__': '{{#dark_theme == "yes"}}      dark:  [lumen, css/theme-dark.scss, css/custom.scss]{{/dark_theme == "yes"}}{{#dark_theme == "no"}}      #dark:  [lumen, css/theme-dark.scss, css/custom.scss]{{/dark_theme == "no"}}'
+
+  # ==== SCSS: Branding / Schrift ====
+  - files: ["css/custom.scss"]
+    replace:
+      '$brand: #FB7171;': '$brand: {{brand_hex}};'
+      '$brand-font: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;': '$brand-font: {{brand_font}};'
+
+  - files: ["css/theme-dark.scss"]
+    replace:
+      '$brand: #FB7171;': '{{#brand_hex_dark != ""}}$brand: {{brand_hex_dark}};{{/brand_hex_dark != ""}}{{#brand_hex_dark == ""}}$brand: {{brand_hex}};{{/brand_hex_dark == ""}}'
+      '$brand-font: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;': '$brand-font: {{brand_font}};'

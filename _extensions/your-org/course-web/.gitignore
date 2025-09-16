@@ -1,0 +1,61 @@
+# --- Quarto / Pandoc ---
+.quarto/                 # Preview/Index/Caches von Quarto
+_freeze/                 # Freeze-Cache (nur committen, wenn bewusst gewollt)
+*_cache/                 # knitr/engine Cache (pro .qmd)
+*_files/                 # Neben-Assets bei lokalem Rendern
+_site/
+
+
+# --- R / RStudio ---
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.Rapp.history
+.rsconnect/
+.Renviron
+.Rprofile
+
+# renv: Lockfile & activate.R behalten, Rest ignorieren
+renv/library/
+renv/staging/
+
+# --- Python / Jupyter ---
+__pycache__/
+*.pyc
+.venv/
+.env
+.ipynb_checkpoints/
+
+# --- Node / SCSS ---
+node_modules/
+.sass-cache/
+
+# --- LaTeX / Biber (bei PDF-Builds) ---
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# --- OS/Editor-Müll ---
+.DS_Store
+Thumbs.db
+Icon?
+*.swp
+*.swo
+
+# --- Stray HTML außerhalb von docs/ vermeiden (optional) ---
+# *.html
+# !docs/**/*.html
+
+/.quarto/
+
+_site/
+

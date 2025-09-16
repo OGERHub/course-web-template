@@ -1,0 +1,3 @@
+# course-template
+
+genau das

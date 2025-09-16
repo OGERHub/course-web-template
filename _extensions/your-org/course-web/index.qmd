@@ -1,0 +1,20 @@
+---
+title: "{{site_title}}"
+---
+<style>
+  body {
+  background-image: url("");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+</style>
+
+
+
+![](images/banner.png)
+
+Willkommen zur Kurs-Website **{{course_code}}** — {{org_name}}.
+
+Diese Seite nutzt Quarto. Änderbare Farben/Branding liegen in `css/custom.scss`. Alles weitere auf der [Quarto Seite](https://quarto.org/docs/websites/)
+

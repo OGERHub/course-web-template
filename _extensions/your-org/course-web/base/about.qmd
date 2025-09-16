@@ -1,0 +1,12 @@
+---
+title: ""
+---
+![](/images/Adam-Savage-Quotes-3.jpg)
+
+# Über diesen Kurs
+
+gibts was zu erzählen
+
+Organisation: **{{org_name}}**
+Kurs: **{{course_code}}**
+Kontakt: <{{contact_email}}>
