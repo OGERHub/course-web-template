@@ -27,7 +27,7 @@ website:
 
   navbar:
     background: primary
-    foreground: light
+    foreground: dark
     logo: images/your-logo.png
     left:
       - icon: question-square-fill
