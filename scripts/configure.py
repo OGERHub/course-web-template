@@ -153,6 +153,18 @@ def simple_replace(text: str, pairs: dict) -> str:
         text = text.replace(old, new)
     return text
 
+def set_light_brand_line(text: str) -> str:
+    """
+    Macht aus 'light: lumen' (oder 'light: [lumen]') die gebrandete Zeile
+    '      light: [lumen, css/custom.scss]'. Idempotent.
+    """
+    pat = re.compile(r'(^\s*light:\s*(?:\[\s*)?lumen(?:\s*\])?\s*$)', flags=re.M)
+    if "custom.scss" in text:
+        return text  # schon gebrandet
+    if pat.search(text):
+        text = pat.sub('      light: [lumen, css/custom.scss]', text, count=1)
+    return text
+
 def set_dark_line(text: str, dark_line: str) -> str:
     # 1) Platzhalter ersetzen (beide Varianten sicher)
     if "__DARK_THEME_LINE__" in text or "# __DARK_THEME_LINE__" in text:
@@ -178,7 +190,10 @@ def update_quarto_yaml(base: Path, v: dict):
         return
     yml = read_text(yml_path)
 
-    # Dark-Theme Zeile setzen
+    # 1) Light-Theme: aus 'light: lumen' → gebrandeter Stack
+    yml = set_light_brand_line(yml)
+
+    # 2) Dark-Theme-Zeile (Platzhalter + idempotente Ersetzung)
     dark_line = (
         '      dark:  [lumen, css/theme-dark.scss, css/custom.scss]'
         if str(v.get("dark_theme", "yes")).lower() == "yes"
@@ -186,41 +201,33 @@ def update_quarto_yaml(base: Path, v: dict):
     )
     yml = set_dark_line(yml, dark_line)
 
-    # Idempotente Zeilenersetzungen
+    # 3) Idempotente Zeilenersetzungen
     yml = replace_entire_line(yml, "title", f'"{v["site_title"]}"')
     yml = replace_entire_line(yml, "site-url", v["site_url"])
     yml = replace_entire_line(yml, "repo-url", v["repo_url"])
     yml = replace_entire_line(yml, "logo", v["logo_path"])
     yml = replace_entire_line(yml, "text", v["portal_text"])
+    yml = replace_entire_line(yml, "href", v["portal_url"])
 
-    # Footer: Org-Name ersetzen
+    # 4) Footer: Org-Name + Impressum-Link robust
     yml = simple_replace(yml, {
         'your organisation (<span class="year"></span>) —':
-        f'{v["org_name"]} (<span class="year"></span>) —',
+            f'{v["org_name"]} (<span class="year"></span>) —',
     })
-
-    # Footer: Impressum-Link robust ersetzen (egal, was vorher drinsteht)
-    # 1) Ziel-HREF aus config
     href_cfg = (v.get("impressum_href", "#") or "#").strip()
-    # .qmd/.md → .html (weil es reines HTML im Footer ist)
-    href_cfg = re.sub(r'\.(qmd|md)$', '.html', href_cfg, flags=re.I)
-
-    # 2) Wenn es schon einen <a class="impressum-link" href="..."> gibt → HREF ersetzen
+    href_cfg = re.sub(r'\.(qmd|md)$', '.html', href_cfg, flags=re.I)  # .qmd/.md → .html für Footer-HTML
     yml_new = re.sub(
         r'(<a[^>]*class="impressum-link"[^>]*href=")[^"]*(")',
         rf'\1{href_cfg}\2',
         yml,
         flags=re.I
     )
-
-    # 3) Falls kein Link vorhanden war (Edge-Case): Standard-Link anhängen
     if yml_new == yml:
         yml_new = yml.replace(
             '(<span class="year"></span>) —',
             f'(<span class="year"></span>) —\n      '
             f'<a class="impressum-link" href="{href_cfg}">Impressum</a>'
         )
-
     yml = yml_new
 
     write_text(yml_path, yml)
