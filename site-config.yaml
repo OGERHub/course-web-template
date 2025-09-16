@@ -32,3 +32,5 @@ institute_url: ""
 chair_name: ""
 chair_url: ""
 imprint_url: ""               # offizielles Uni-Impressum
+course_code: "KURS-123"
+contact_email: "name@uni.de"
