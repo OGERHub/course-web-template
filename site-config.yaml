@@ -13,7 +13,7 @@ portal_text: "Interne Lernplattform"
 portal_url: "https://www.ilias.uni-koeln.de/ilias/login.php?client_id=uk&cmd=force_login&lang=de"
 
 # Footer / Impressum-Link im Footer
-impressum_href: "#"
+impressum_href: "base/impressum.qmd"   # Script macht automatisch .html daraus
 
 # --- Branding ---
 brand_hex: "#008BFF"          # Light

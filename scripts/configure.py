@@ -178,7 +178,7 @@ def update_quarto_yaml(base: Path, v: dict):
         return
     yml = read_text(yml_path)
 
-    # Set dark line depending on switch
+    # Dark-Theme Zeile setzen
     dark_line = (
         '      dark:  [lumen, css/theme-dark.scss, css/custom.scss]'
         if str(v.get("dark_theme", "yes")).lower() == "yes"
@@ -186,19 +186,42 @@ def update_quarto_yaml(base: Path, v: dict):
     )
     yml = set_dark_line(yml, dark_line)
 
-    # Robust line replacements (idempotent; ersetzt ganze Zeile)
+    # Idempotente Zeilenersetzungen
     yml = replace_entire_line(yml, "title", f'"{v["site_title"]}"')
     yml = replace_entire_line(yml, "site-url", v["site_url"])
     yml = replace_entire_line(yml, "repo-url", v["repo_url"])
     yml = replace_entire_line(yml, "logo", v["logo_path"])
     yml = replace_entire_line(yml, "text", v["portal_text"])
-    yml = replace_entire_line(yml, "href", v["portal_url"])
 
-    # Footer/Impressum-HTML und Org-Name (string-basierte Ersetzungen)
+    # Footer: Org-Name ersetzen
     yml = simple_replace(yml, {
-        'your organisation (<span class="year"></span>) —': f'{v["org_name"]} (<span class="year"></span>) —',
-        '<a class="impressum-link" href="#">Impressum</a>': f'<a class="impressum-link" href="{v["impressum_href"]}">Impressum</a>',
+        'your organisation (<span class="year"></span>) —':
+        f'{v["org_name"]} (<span class="year"></span>) —',
     })
+
+    # Footer: Impressum-Link robust ersetzen (egal, was vorher drinsteht)
+    # 1) Ziel-HREF aus config
+    href_cfg = (v.get("impressum_href", "#") or "#").strip()
+    # .qmd/.md → .html (weil es reines HTML im Footer ist)
+    href_cfg = re.sub(r'\.(qmd|md)$', '.html', href_cfg, flags=re.I)
+
+    # 2) Wenn es schon einen <a class="impressum-link" href="..."> gibt → HREF ersetzen
+    yml_new = re.sub(
+        r'(<a[^>]*class="impressum-link"[^>]*href=")[^"]*(")',
+        rf'\1{href_cfg}\2',
+        yml,
+        flags=re.I
+    )
+
+    # 3) Falls kein Link vorhanden war (Edge-Case): Standard-Link anhängen
+    if yml_new == yml:
+        yml_new = yml.replace(
+            '(<span class="year"></span>) —',
+            f'(<span class="year"></span>) —\n      '
+            f'<a class="impressum-link" href="{href_cfg}">Impressum</a>'
+        )
+
+    yml = yml_new
 
     write_text(yml_path, yml)
 
