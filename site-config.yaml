@@ -16,8 +16,16 @@ portal_url: "https://www.ilias.uni-koeln.de/ilias/login.php?client_id=uk&cmd=for
 impressum_href: "base/impressum.qmd"   # Script macht automatisch .html daraus
 
 # --- Branding ---
-brand_hex: "#008BFF"          # Light
-brand_hex_dark: ""            # optional (leer = wie Light)
+
+# --- Vanilla ---
+brand_hex: ""          # leer lassen
+brand_hex_dark: ""     # egal/leer
+
+# --- Auskommentieren um Branding Color zu aktivieren 
+#brand_hex: "#008BFF"          # Light
+#brand_hex_dark: "yes"            # optional (leer = wie Light)
+
+
 brand_font: "system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif"
 dark_theme: "yes"             # "yes" oder "no"
 

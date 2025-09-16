@@ -16,7 +16,7 @@ Beispiele:
 """
 
 from pathlib import Path
-import argparse, os, sys, re
+import argparse, sys, re
 
 # ---------- CLI ----------
 p = argparse.ArgumentParser(description="Apply site-config.yaml to project files.")
@@ -86,7 +86,7 @@ SCHEMA = [
     ("portal_text","Navbar rechts: Link-Text","Interne Lernplattform", False),
     ("portal_url","Navbar rechts: URL","https://www.ilias.uni-koeln.de/ilias/login.php?client_id=uk&cmd=force_login&lang=de", False),
     ("impressum_href","Footer: Impressum-Link","#", False),
-    ("brand_hex","Markenfarbe Light (HEX)","#FB7171", True),
+    ("brand_hex","Markenfarbe Light (HEX)","#FB7171", False),  # leer = vanilla
     ("brand_hex_dark","Markenfarbe Dark (HEX, leer = wie Light)","", False),
     ("brand_font","Primär-Schriftfamilie (CSS)","system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif", False),
     ("dark_theme","Dark-Theme aktivieren? (yes/no)","yes", False),
@@ -139,8 +139,7 @@ def write_text(path: Path, text: str) -> None:
 def replace_entire_line(text: str, key: str, value: str) -> str:
     """
     Ersetzt die gesamte YAML-Zeile 'key: ...' durch 'key: value' (idempotent).
-    Beispiel: key='href' -> '  href: https://...'
-    Achtung: ersetzt alle Zeilen mit exakt diesem key.
+    Achtung: ersetzt alle Zeilen mit exakt diesem key (inkl. Einrückung).
     """
     pattern = re.compile(rf'^(\s*{re.escape(key)}:\s*).*$',
                          flags=re.M)
@@ -153,34 +152,51 @@ def simple_replace(text: str, pairs: dict) -> str:
         text = text.replace(old, new)
     return text
 
-def set_light_brand_line(text: str) -> str:
+def set_light_brand_line(text: str, use_brand: bool) -> str:
     """
-    Macht aus 'light: lumen' (oder 'light: [lumen]') die gebrandete Zeile
-    '      light: [lumen, css/custom.scss]'. Idempotent.
+    Branding AN: 'light: lumen' → 'light: [lumen, css/custom.scss]'
+    Branding AUS: 'light: [lumen, css/custom.scss]' → 'light: lumen'
+    Idempotent.
     """
-    pat = re.compile(r'(^\s*light:\s*(?:\[\s*)?lumen(?:\s*\])?\s*$)', flags=re.M)
-    if "custom.scss" in text:
-        return text  # schon gebrandet
-    if pat.search(text):
-        text = pat.sub('      light: [lumen, css/custom.scss]', text, count=1)
+    if use_brand:
+        pat = re.compile(r'(^\s*light:\s*(?:\[\s*)?lumen(?:\s*\])?\s*$)', flags=re.M)
+        if "custom.scss" in text:
+            return text
+        return pat.sub('      light: [lumen, css/custom.scss]', text, count=1)
+    # use_brand False → zurück auf vanilla
+    text = re.sub(r'^\s*light:\s*\[.*?custom\.scss.*?\]\s*$', '      light: lumen', text, flags=re.M)
     return text
 
-def set_dark_line(text: str, dark_line: str) -> str:
-    # 1) Platzhalter ersetzen (beide Varianten sicher)
+def set_dark_line(text: str, use_brand: bool, dark_on: bool) -> str:
+    """
+    Setzt/ersetzt die dark-Zeile passend zu Branding+Schalter.
+    - Branding AN & dark_on → [lumen, css/theme-dark.scss, css/custom.scss]
+    - Branding AUS & dark_on → lumen
+    - dark AUS → kommentierte Zeile (lumen oder Stack)
+    """
+    if dark_on and use_brand:
+        dark_line = '      dark:  [lumen, css/theme-dark.scss, css/custom.scss]'
+    elif dark_on and not use_brand:
+        dark_line = '      dark:  lumen'
+    else:
+        dark_line = '      #dark:  lumen' if not use_brand else '      #dark:  [lumen, css/theme-dark.scss, css/custom.scss]'
+
+    # Platzhalter ersetzen
     if "__DARK_THEME_LINE__" in text or "# __DARK_THEME_LINE__" in text:
         text = text.replace("__DARK_THEME_LINE__", dark_line)
         text = text.replace("# __DARK_THEME_LINE__", dark_line)
         return text
-    # 2) vorhandene dark-Zeile (kommentiert oder nicht) ersetzen
-    pat = re.compile(r'^\s*#?\s*dark:\s*\[.*theme-dark.*\].*$', flags=re.M)
-    if pat.search(text):
-        text = pat.sub(dark_line, text)
-        return text
-    # 3) Fallback: nach 'light:' suchen und Zeile darunter einfügen
-    m = re.search(r'(^\s*light:\s*\[.*\]\s*$)', text, flags=re.M)
+
+    # Existierende dark-Zeile (Stack oder lumen; kommentiert oder nicht) ersetzen
+    text2 = re.sub(r'^\s*#?\s*dark:\s*\[.*?\]\s*$', dark_line, text, flags=re.M)
+    text2 = re.sub(r'^\s*#?\s*dark:\s*lumen\s*$', dark_line, text2, flags=re.M)
+    if text2 != text:
+        return text2
+
+    # Falls keine dark-Zeile existiert: unter 'light:' einfügen
+    m = re.search(r'(^\s*light:.*$)', text, flags=re.M)
     if m:
-        insert_pos = m.end(1)
-        text = text[:insert_pos] + "\n" + dark_line + text[insert_pos:]
+        return text[:m.end(1)] + "\n" + dark_line + text[m.end(1):]
     return text
 
 # ---------- updates ----------
@@ -190,16 +206,14 @@ def update_quarto_yaml(base: Path, v: dict):
         return
     yml = read_text(yml_path)
 
-    # 1) Light-Theme: aus 'light: lumen' → gebrandeter Stack
-    yml = set_light_brand_line(yml)
+    USE_BRAND = bool((v.get("brand_hex") or "").strip())
+    DARK_ON   = str(v.get("dark_theme","yes")).lower() == "yes"
 
-    # 2) Dark-Theme-Zeile (Platzhalter + idempotente Ersetzung)
-    dark_line = (
-        '      dark:  [lumen, css/theme-dark.scss, css/custom.scss]'
-        if str(v.get("dark_theme", "yes")).lower() == "yes"
-        else '      #dark:  [lumen, css/theme-dark.scss, css/custom.scss]'
-    )
-    yml = set_dark_line(yml, dark_line)
+    # 1) Light-Theme je nach Branding
+    yml = set_light_brand_line(yml, USE_BRAND)
+
+    # 2) Dark-Theme je nach Branding + Schalter
+    yml = set_dark_line(yml, USE_BRAND, DARK_ON)
 
     # 3) Idempotente Zeilenersetzungen
     yml = replace_entire_line(yml, "title", f'"{v["site_title"]}"')
@@ -216,23 +230,15 @@ def update_quarto_yaml(base: Path, v: dict):
     })
     href_cfg = (v.get("impressum_href", "#") or "#").strip()
     href_cfg = re.sub(r'\.(qmd|md)$', '.html', href_cfg, flags=re.I)  # .qmd/.md → .html für Footer-HTML
-    yml_new = re.sub(
-        r'(<a[^>]*class="impressum-link"[^>]*href=")[^"]*(")',
-        rf'\1{href_cfg}\2',
-        yml,
-        flags=re.I
-    )
-    if yml_new == yml:
-        yml_new = yml.replace(
-            '(<span class="year"></span>) —',
-            f'(<span class="year"></span>) —\n      '
-            f'<a class="impressum-link" href="{href_cfg}">Impressum</a>'
-        )
-    yml = yml_new
+    yml = re.sub(r'(<a[^>]*class="impressum-link"[^>]*href=")[^"]*(")',
+                 rf'\1{href_cfg}\2', yml, flags=re.I)
 
     write_text(yml_path, yml)
 
 def update_scss(base: Path, v: dict):
+    # Branding leer → keine SCSS-Anpassung
+    if not (v.get("brand_hex") or "").strip():
+        return
     css = base / "css" / "custom.scss"
     if css.exists():
         t = read_text(css)
@@ -246,7 +252,10 @@ def update_scss(base: Path, v: dict):
     tdark = base / "css" / "theme-dark.scss"
     if tdark.exists():
         t = read_text(tdark)
-        brand_dark = v["brand_hex_dark"] if v.get("brand_hex_dark") else v["brand_hex"]
+        brand_dark = v["brand_hex_dark"] if (v.get("brand_hex_dark") or "").strip() else v.get("brand_hex","")
+        if not brand_dark:
+            # falls beides leer, nichts tun
+            return
         t = simple_replace(t, {
             '$brand: #FB7171;': f'$brand: {brand_dark};',
             '$brand-font: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;':
