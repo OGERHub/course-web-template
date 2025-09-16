@@ -2,6 +2,8 @@
 
 Ein Quarto-Gerüst für Kurs-Webseiten mit **Branding**, **Impressum** und **Auto-Deploy auf GitHub Pages**.
 
+Ein Blick auf die [Demo Seite](https://ogerhub.github.io/course-web-template/) zeigt das Default-setup.
+
 ------------------------------------------------------------------------
 
 1.  **Repo erstellen**
