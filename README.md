@@ -56,7 +56,7 @@ quarto use template ORG/REPO
 ### Konfiguration anwenden (eine Variante wählen)
 
 
-Im Repo befindet sich die **`site-config.yaml`** (in Ruhe ausfüllen). Dann eines der Konfig-Skripte **`scripts/configure.py [sh, R]`** (setzt Werte in Projektdateien) aufrufen.
+Im Repo befindet sich die **`site-config.yaml`** (in Ruhe ausfüllen). Dann das Config-Skript **`scripts/configure.py]`** (setzt Werte in Projektdateien) aufrufen.
 Falls Interaktiv gewählt wird werden alle Felder abgefragt.
 
 #### Python
@@ -69,28 +69,7 @@ python3 scripts/configure.py --interactive
 # explizite Config-Datei:
 python3 scripts/configure.py --noninteractive --config ./site-config.yaml
 ```
-#### Bash/gitbash
 
-```bash
-# Bash (Default: non-interactive)
-bash scripts/configure.sh
-# oder ausführbar machen:
-chmod +x scripts/configure.sh && ./scripts/configure.sh
-# interaktiv:
-./scripts/configure.sh --interactive
-# mit Config-Pfad:
-./scripts/configure.sh --noninteractive --config ./site-config.yaml
-```
-#### R
-
-```bash
-# R (Default: non-interactive)
-Rscript scripts/configure.R
-# interaktiv:
-Rscript scripts/configure.R --interactive
-# mit Config-Pfad:
-Rscript scripts/configure.R --noninteractive --config ./site-config.yaml
-```
 
 
 **Wichtige Felder (Beispiele):**

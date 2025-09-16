@@ -66,7 +66,7 @@ Phasellus sit amet nunc at turpis luctus posuere. Donec ullamcorper, purus nec v
 - Grenzen benannt?
 :::
 ::: {.g-col-5}
-![](../images/header.jpg){#fig-skizze}
+![](../images/whereto.png){#fig-skizze}
 :::
 :::
 
@@ -96,7 +96,7 @@ Kurzer Text.
 :::
 ::: {.column width="33%"}
 #### Mini-Kasten B
-![Amazonas in Hessen](../images/gisma-11.jpg)
+![Amazonas in Hessen](../images/bayern-umweltschutz-sp.jpg)
 :::
 ::: {.column width="33%"}
 #### Mini-Kasten C

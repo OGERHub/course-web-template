@@ -63,7 +63,8 @@ format:
   html:
     theme:
       light: [lumen, css/custom.scss]
-      __DARK_THEME_LINE__   # <- wird durch template.yml aktiviert/auskommentiert
+      # __DARK_THEME_LINE__   # ← wird vom configure-Script ersetzt
+    css: css/styles.css
     css: css/styles.css
     toc: true
     code-copy: true
