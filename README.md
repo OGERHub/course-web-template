@@ -26,9 +26,9 @@ Ein Quarto-Gerüst für Kurs-Webseiten mit **Branding**, **Impressum** und **Aut
 
 ------------------------------------------------------------------------
 
-## 1) Neues Repo anlegen
+# Neues Repo anlegen
 
-### Variante A – GitHub Button
+## Variante A – GitHub Button
 
 1.  Im Template-Repo: **Use this template** → neues Repo erstellen.
 
@@ -39,7 +39,7 @@ Ein Quarto-Gerüst für Kurs-Webseiten mit **Branding**, **Impressum** und **Aut
     cd <REPO>
     ```
 
-### Variante B – Quarto CLI
+## Variante B – Quarto CLI
 
 In einem **leeren** Ordner:
 
@@ -96,7 +96,7 @@ Das Script aktualisiert u. a.:
 
 ------------------------------------------------------------------------
 
-## 3) Build & Deploy (GitHub Actions)
+## Build & Deploy (GitHub Actions)
 
 Der Workflow `.github/workflows/quarto-build.yml`:
 
