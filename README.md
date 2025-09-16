@@ -56,10 +56,10 @@ quarto use template ORG/REPO
 ### Konfiguration anwenden (eine Variante wählen)
 
 
-Im Repo liegen **`site-config.yaml`** (in Ruhe ausfüllen) und **`scripts/configure.py`** (setzt Werte in Projektdateien).
+Im Repo befindet sich die **`site-config.yaml`** (in Ruhe ausfüllen). Dann eines der Konfig-Skripte **`scripts/configure.py [sh, R]`** (setzt Werte in Projektdateien) aufrufen.
+Falls Interaktiv gewählt wird werden alle Felder abgefragt.
 
-
-####Python
+#### Python
 
 ```bash
 # Python (Default: non-interactive)
