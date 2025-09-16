@@ -83,3 +83,31 @@ a:focus-visible, .btn:focus-visible {
   background-color: color-mix(in srgb, var(--brand) 85%, black);
   border-color: currentColor;
 }
+
+/* ==== Navbar: Auto-Kontrast je nach $brand ==== */
+$nav-fg: if(lightness($brand) > 60%, #111111, #ffffff);
+
+.navbar.bg-primary,
+.navbar.navbar-dark.bg-primary,
+.navbar.navbar-light.bg-primary {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+
+  /* Bootstrap Navbar-Variablen hart setzen */
+  --bs-navbar-color: #{$nav-fg};
+  --bs-navbar-hover-color: rgba($nav-fg, .85);
+  --bs-navbar-brand-color: #{$nav-fg};
+  --bs-navbar-brand-hover-color: rgba($nav-fg, .85);
+
+  /* Fallbacks gegen Theme-Overrides */
+  color: var(--bs-navbar-color) !important;
+}
+
+.navbar.bg-primary .navbar-brand,
+.navbar.bg-primary .nav-link {
+  color: var(--bs-navbar-color) !important;
+}
+.navbar.bg-primary .nav-link:hover,
+.navbar.bg-primary .navbar-brand:hover {
+  color: var(--bs-navbar-hover-color) !important;
+}
