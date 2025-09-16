@@ -27,8 +27,8 @@ website:
 
   navbar:
     background: primary
-    foreground: dark
-    logo: images/your-logo.png
+    foreground: light
+    logo: images/logooil.jpg
     left:
       - icon: question-square-fill
         text: FAQ
@@ -62,7 +62,7 @@ website:
 format:
   html:
     theme:
-      light: [lumen, css/custom.scss]
+      light: [lumen]
       # __DARK_THEME_LINE__   # ← wird vom configure-Script ersetzt
     css: css/styles.css
     toc: true
