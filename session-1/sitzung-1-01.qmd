@@ -47,7 +47,7 @@ Die beiden Beispielabbildungen stehen nebeneinander; in Texten kann darauf mit @
 
 :::
 
-Textbezug: Die Gottesfürchtigkeit in @fig-a geht Hand in Hand mit tiefreligiösen Wahrnehmung des Weihnachtsfestes in @fig-b. Kinder sind eine tragende Säule der Glaubwürdigkeit
+Textbezug: Die Gottesfürchtigkeit in @fig-a geht Hand in Hand mit tiefreligiösen Wahrnehmung des Weihnachtsfestes in @fig-b. Kinder sind hierbei eine tragende Säule.
 
 ## Text + Bild in Spalten
 
@@ -96,7 +96,7 @@ Kurzer Text.
 :::
 ::: {.column width="33%"}
 #### Mini-Kasten B
-![Amazonas in Hessen](../images/bayern-umweltschutz-sp.jpg)
+![Bayrischer Umweltschutz](../images/bayern-umweltschutz-sp.jpg)
 :::
 ::: {.column width="33%"}
 #### Mini-Kasten C
