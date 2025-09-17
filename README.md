@@ -4,6 +4,8 @@ Ein Quarto-Gerüst für Kurs-Webseiten mit **Branding**, **Impressum** und **Aut
 
 Ein Blick auf die [Demo Seite](https://ogerhub.github.io/course-web-template/) zeigt das Default-setup.
 
+> Das Template kann grundsätzlich auch vollständig im Browser genutzt werden. Dann müssen jedoch alle Einträge und Prüfungen, die `scripts/configure.py` sonst automatisch vornimmt, **manuell** erfolgen. Empfehlenswert ist daher: Repo einmal lokal klonen, die `site-config.yaml` ausfüllen und anschließend `python3 scripts/configure.py` ausführen. Danach pushen – ab dann läuft der Build/Deploy automatisch und die Inhalte können bei Bedarf auch ausschließlich online weiterbearbeitet werden.
+
 ------------------------------------------------------------------------
 
 1.  **Repo erstellen**
