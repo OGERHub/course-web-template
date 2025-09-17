@@ -1,31 +1,29 @@
 # site-config.yaml — Projektkonfiguration für Quarto-Kurswebsite
-# Fülle in Ruhe aus; das Setup-Script fragt nur leere Felder nach.
-
+# Fülle in Ruhe aus
 
 # --- Kurs Infos
-course_code: "KURS-123"
-contact_email: "name@uni.de"
-site_title: "your title"
-org_name: "your organisation"
+course_code: "KURS-123"                                      # Potentieller Code LV-yyyy-yyy wird nur auf der Index Seite eingetragen
+contact_email: "name@uni.de"                                 # kann abweichend oder gleich zu Impressum sein in der Regel Dozen*in wird nur auf der Index Seite eingetragen    
+site_title: "your title"                                     # Name der Seite in der Titelleiste
+org_name: "your organisation"                                # erscheint im Gegensatz zu chair_name etc im Footer  Header usw            
 site_url: "https://your-github-name.github.io/your-repo"
-repo_url: "https://github.com/your-github-name/your-repo"
-logo_path: "images/your-logo.png"
+repo_url: "https://github.com/your-github-name/your-repo"    
+logo_path: "images/your-logo.png"                            # Logo obere Ecke Navbar
 
 # Navbar rechts
-portal_text: "Interne Lernplattform"
-portal_url: "https://www.ilias.uni-koeln.de/ilias/login.php?client_id=uk&cmd=force_login&lang=de"
+portal_text: ""                     # z.B. Interne Lernplattform
+portal_url: ""                      # https://www.ilias.uni-koeln.de/ilias/login.php?client_id=uk&cmd=force_login&lang=de
 
 # Footer / Impressum-Link im Footer
 impressum_href: "base/impressum.qmd"   # Script macht automatisch .html daraus
 
 # --- Branding ---
-
-# --- Vanilla ---
+# --- Vanilla = original theme ---
 brand_hex: ""          # leer lassen
-brand_hex_dark: ""     # egal/leer
+brand_hex_dark: ""     # leer lassen
 
 # --- Auskommentieren um Branding Color zu aktivieren 
-#brand_hex: "#008BFF"          # Light
+#brand_hex: "#008BFF"             # Light
 #brand_hex_dark: "yes"            # optional (leer = wie Light)
 
 
@@ -33,14 +31,14 @@ brand_font: "system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto
 dark_theme: "yes"             # "yes" oder "no"
 
 # --- Impressum / Datenschutz ---
-responsible_name: ""          # z. B. "Prof. Dr. …"
-responsible_address: "<br />" # HTML-Zeilenumbruch mit <br />
-responsible_email: ""
-uni_name: ""
-uni_url: ""
-institute_name: ""
-institute_url: ""
-chair_name: ""
-chair_url: ""
-imprint_url: ""               # offizielles Uni-Impressum
+responsible_name: ""                                        # z. B. "Prof. Dr. …"
+responsible_address: " Zeile1 <br/> Zeile 2 <br/> Zeile 3"  # HTML-Zeilenumbruch mit <br />
+responsible_email: "responsible@uni.de"                     # email der Impressum verantworlichen Person
+uni_name: ""                                                # Name der Uni/Institution               
+uni_url: ""                                                 # Hompage der Uni/Institution
+institute_name: ""                                          # Name der Abteilung/Institut/Unterorganisation
+institute_url: ""                                           # Hompage der Abteilung/Institut/Unterorganisation
+chair_name: ""                                              # Name der AG
+chair_url: ""                                               # Hompage der AG
+imprint_url: ""                                             # offizielles Impressum der Organisation
 

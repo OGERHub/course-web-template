@@ -72,6 +72,8 @@ format:
     link-external-newwindow: true
     link-external-filter: '^(?:http:|https:)\/\/www\.quarto\.org\/custom'
     md-extensions: +fenced_divs+bracketed_spans+link_attributes
-    include-after-body: ["_footer-year.html"]
+    include-after-body:
+      - "includes/_footer-year.html"
+
 
 lang: de
