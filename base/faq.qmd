@@ -14,6 +14,8 @@ Seiten sind `.qmd`-Dateien. Änderungen committen und pushen; GitHub Actions bau
 
 :::
 
-::: {.callout-warning collapse="true"}
-## Learn More...
+::: {.callout-warning title="Learn More..." collapse="true"}
+
+
+Diese Seite nutzt Quarto. Änderbare Farben/Branding liegen in `css/custom.scss`. Alles weitere auf der [Quarto Seite](https://quarto.org/docs/websites/)
 :::

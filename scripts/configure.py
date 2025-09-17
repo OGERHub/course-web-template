@@ -17,6 +17,7 @@ Beispiele:
 from pathlib import Path
 from datetime import datetime
 import argparse, sys, re
+from urllib.parse import urlparse
 
 # ---------- CLI ----------
 p = argparse.ArgumentParser(description="Apply site-config.yaml to project files.")
@@ -212,6 +213,70 @@ def set_dark_line(text: str, use_brand: bool, dark_on: bool) -> str:
     if m:
         return text[:m.end(1)] + "\n" + dark_line + text[m.end(1):]
     return text
+  
+def _escape_for_regex_path(host_plus_path: str) -> str:
+    # regex-escape und Slashes als '\/' schreiben
+    return re.escape(host_plus_path).replace("/", r"\/")
+
+def set_link_external_filter_line(text: str, site_url: str, file_path: Path = None) -> str:
+    """
+    Setzt/aktualisiert 'link-external-filter:' in _quarto.yml so, dass die eigene site_url
+    als 'intern' gilt. Idempotent: fügt den Host/Pfad nur hinzu, wenn noch nicht enthalten.
+    Beispiel-Resultat:
+      link-external-filter: '^(?:http:|https:)\/\/(user\.github\.io\/repo|www\.quarto\.org\/custom)'
+    """
+    if not (site_url or "").strip():
+        _log(f"[{file_path.name if file_path else '?'}] link-external-filter: site_url leer → übersprungen")
+        return text
+
+    u = urlparse(site_url.strip())
+    if not u.scheme or not u.netloc:
+        _log(f"[{file_path.name if file_path else '?'}] link-external-filter: ungültige site_url → '{site_url}'")
+        return text
+
+    # host + optional Pfad (für GH Pages z.B. user.github.io/repo)
+    host_path = u.netloc + (("/" + u.path.strip("/")) if u.path and u.path.strip("/") else "")
+    site_piece = _escape_for_regex_path(host_path)
+
+    wanted_val = f"'^(?:http:|https:)\\/\\/({site_piece}|www\\.quarto\\.org\\/custom)'"
+    line_re = re.compile(r'^\s*link-external-filter:\s*.*$', re.M)
+
+    # Falls Zeile bereits existiert: überschreiben, außer unser Host ist schon drin
+    m = line_re.search(text)
+    if m:
+        current_line = m.group(0)
+        if site_piece in current_line:
+            _log(f"[{file_path.name if file_path else '?'}] link-external-filter: eigener Host bereits enthalten")
+            return text
+        new_line = re.sub(r':\s*.*$', f": {wanted_val}", current_line)
+        text = text[:m.start()] + new_line + text[m.end():]
+        _log(f"[{file_path.name if file_path else '?'}] link-external-filter aktualisiert → {wanted_val}")
+        return text
+
+    # Sonst einfügen: bevorzugt nach 'md-extensions:', sonst unter 'html:', sonst ans Ende
+    md_match = re.search(r'^(\s*)md-extensions:\s*.*$', text, re.M)
+    if md_match:
+        indent = md_match.group(1)
+        insert = f"\n{indent}link-external-filter: {wanted_val}"
+        pos = md_match.end(0)
+        text = text[:pos] + insert + text[pos:]
+        _log(f"[{file_path.name if file_path else '?'}] link-external-filter eingefügt nach md-extensions → {wanted_val}")
+        return text
+
+    html_match = re.search(r'^(\s*)html:\s*$', text, re.M)
+    if html_match:
+        indent = html_match.group(1) + "  "
+        insert = f"\n{indent}link-external-filter: {wanted_val}"
+        pos = html_match.end(0)
+        text = text[:pos] + insert + text[pos:]
+        _log(f"[{file_path.name if file_path else '?'}] link-external-filter eingefügt unter html → {wanted_val}")
+        return text
+
+    # Fallback: einfach am Ende mit üblicher Einrückung ergänzen
+    text = text.rstrip() + f"\n      link-external-filter: {wanted_val}\n"
+    _log(f"[{file_path.name if file_path else '?'}] link-external-filter angehängt → {wanted_val}")
+    return text
+
 
 # ---------- updates ----------
 def update_quarto_yaml(base: Path, v: dict):
@@ -252,6 +317,7 @@ def update_quarto_yaml(base: Path, v: dict):
         _log(f"[{yml_path.name}] regex_replace impressum-link → '{href_cfg}'")
     else:
         _log(f"[{yml_path.name}] impressum-link nicht gefunden (keine Änderung)")
+    yml = set_link_external_filter_line(yml, v.get("site_url",""), yml_path)
 
     write_text(yml_path, yml)
 
