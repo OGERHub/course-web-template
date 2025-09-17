@@ -42,23 +42,24 @@ website:
     pinned: true
     align: center
     style: docked
-    collapse-level: 1
-    contents:
-      - section: "Willkommen"
-        contents:
-          - index.qmd
-          - base/about.qmd
-      - text: "---"
-      - section: "Kurs-Sitzungen"
-        contents:
-          - section: "Sitzung 1"
-            contents:
-              - session-1/sitzung-1-01.qmd
-          - section: "Sitzung 2"
-            contents:
-              - session-2/sitzung-2-01.qmd
-              - session-2/sitzung-2-02.qmd
-
+    contents: auto
+    # collapse-level: 1
+    # contents:
+    #   - section: "Willkommen"
+    #     contents:
+    #       - index.qmd
+    #       - base/about.qmd
+    #   - text: "---"
+    #   - section: "Kurs-Sitzungen"
+    #     contents:
+    #       - section: "Sitzung 1"
+    #         contents:
+    #           - session-1/sitzung-1-01.qmd
+    #       - section: "Sitzung 2"
+    #         contents:
+    #           - session-2/sitzung-2-01.qmd
+    #           - session-2/sitzung-2-02.qmd
+    # 
 format:
   html:
     theme:
