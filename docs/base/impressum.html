@@ -83,8 +83,8 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/logooil.jpg" alt="" class="navbar-logo light-content">
-    <img src="../images/logooil.jpg" alt="" class="navbar-logo dark-content">
+    <img src="../images/your-logo.png" alt="" class="navbar-logo light-content">
+    <img src="../images/your-logo.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">your title</span>
@@ -147,7 +147,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">{{site_title}}</span></a>
+ <span class="menu-text">your title</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -254,17 +254,17 @@ ul.task-list li input[type="checkbox"] {
 <p><img src="../images/hinterland-sp.jpg" class="img-fluid"></p>
 <section id="impressum" class="level1">
 <h1>Impressum</h1>
-<p>This website is part of the reproducible research framework of the <a href="{{uni_url}}">{{uni_name}}</a>. It is developed at the <a href="{{institute_url}}">{{institute_name}}</a> under responsibility of the <a href="{{chair_url}}">{{chair_name}}</a>.</p>
+<p>This website is part of the reproducible research framework of the <a href=""></a>. It is developed at the <a href=""></a> under responsibility of the <a href=""></a>.</p>
 <p>
-{{responsible_name}}<br>{{responsible_address}}
+<br> Zeile1 <br> Zeile 2 <br> Zeile 3
 </p>
 <p>
-Email: <a href="mailto:{{responsible_email}}">{{responsible_email}}</a>
+Email: <a href="mailto:responsible@uni.de">responsible@uni.de</a>
 </p>
 <p>
-Imprint: <a href="{{imprint_url}}" target="_blank">{{imprint_url}}</a>.
+Imprint: <a href="" target="_blank"></a>.
 </p>
-<p>This website is brought with the background of <a href="https://open-educational-resources.de/">Open Educational Resources</a> initiative coordinated by the <a href="https://www.dipf.de/de">Leibniz-Institut für Bildungsforschung und Bildungsinformation</a> and integrated in the official teaching and reproducible research framework of the <a href="{{uni_url}}">{{uni_name}}</a>. It is developed at the <a href="{{institute_url}}">{{institute_name}}</a> under responsibility of the <a href="{{chair_url}}">{{chair_name}}</a>.</p>
+<p>This website is brought with the background of <a href="https://open-educational-resources.de/">Open Educational Resources</a> initiative coordinated by the <a href="https://www.dipf.de/de">Leibniz-Institut für Bildungsforschung und Bildungsinformation</a> and integrated in the official teaching and reproducible research framework of the <a href=""></a>. It is developed at the <a href=""></a> under responsibility of the <a href=""></a>.</p>
 <section id="content-responsibility" class="level2">
 <h2 class="anchored" data-anchor-id="content-responsibility">Content Responsibility</h2>
 <p>The responsibility for the content rests with the instructors. Statements, opinions and/or conclusions are the ones from the instructors and do not necessarily reflect the opinion of the representatives of Marburg University.</p>
@@ -291,13 +291,13 @@ The terms used are not gender-specific.
 Responsible
 </h2>
 <p>
-{{responsible_name}}<br>{{responsible_address}}
+<br> Zeile1 <br> Zeile 2 <br> Zeile 3
 </p>
 <p>
-Email address: <a href="mailto:{{responsible_email}}">{{responsible_email}}</a>.
+Email address: <a href="mailto:responsible@uni.de">responsible@uni.de</a>.
 </p>
 <p>
-Imprint: <a href="{{imprint_url}}" target="_blank">{{imprint_url}}</a>.
+Imprint: <a href="" target="_blank"></a>.
 </p>
 <h2 id="mOverview" class="anchored">
 Overview of Processing
@@ -594,7 +594,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("^(?:http:|https:)\/\/www\.quarto\.org\/custom");
+        var filterRegex = new RegExp("^(?:http:|https:)//(your\-github\-name\.github\.io/your\-repo|www\.quarto\.org/custom)");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -935,7 +935,7 @@ document.addEventListener('DOMContentLoaded', function () {
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>your organisation (<span class="year"></span>) — <a class="impressum-link" href="#">Impressum</a></p>
+<p>your organisation (<span class="year"></span>) — <a class="impressum-link" href="base/impressum.html">Impressum</a></p>
 </div>
     <div class="nav-footer-right">
       &nbsp;
