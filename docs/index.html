@@ -80,7 +80,8 @@ ul.task-list li input[type="checkbox"] {
 
       .quarto-title-block .quarto-title-banner {
         color: black;
-background: images/banner.jpg;
+background-image: url(images/banner-sp.jpg);
+background-size: cover;
       }
 </style>
 
@@ -262,7 +263,6 @@ background: images/banner.jpg;
 }
 
 </style>
-<p><img src="images/banner.png" class="img-fluid"></p>
 <p>Willkommen zur Kurs-Website <strong>KURS-123</strong> — your organisation.</p>
 
 
@@ -374,8 +374,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (link.getAttribute("rel") === null) {
               link.setAttribute("rel", "noopener");
             }
-            // default icon
-            link.classList.add("external");
         }
       }
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
