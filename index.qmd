@@ -1,6 +1,6 @@
 ---
 title: "{{site_title}}"
-title-block-banner: images/banner.jpg
+title-block-banner: images/banner-sp.jpg
 title-block-banner-color: black 
 format-links: [html]   # Link-Namen müssen den Formatkeys entsprechen
 format:
@@ -17,7 +17,7 @@ format:
 
 
 
-![](images/banner.png)
+
 
 Willkommen zur Kurs-Website **{{course_code}}** — {{org_name}}.
 
