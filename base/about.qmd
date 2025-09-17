@@ -1,11 +1,14 @@
 ---
-title: ""
+title: "Über..."
+title-block-banner: ../images/banner.jpg
+title-block-banner-color: black 
+format-links: [html]   # Link-Namen müssen den Formatkeys entsprechen
+format:
+  html: { toc: true, toc-depth: 2, code-fold: true, number-sections: false }
 ---
-![](/images/Adam-Savage-Quotes-3.jpg)
 
-# Über diesen Kurs
 
-gibts was zu erzählen
+diesen Kurs gibts was zu erzählen
 
 Organisation: **{{org_name}}**
 Kurs: **{{course_code}}**
