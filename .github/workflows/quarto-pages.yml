@@ -9,13 +9,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write   # nötig für das Pushen von docs/
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Ci-Profil erzwingt output-dir=docs (ohne Repo-Änderungen)
+      # Optional: Python-Version ausgeben (Python ist auf ubuntu-latest vorinstalliert)
+      - name: Show Python
+        run: python3 --version
+
+      # Anwenden der Konfiguration (liest site-config.yaml, schreibt _quarto.yml, SCSS, QMDs)
+      # Läuft idempotent – sicher bei jedem Run.
+      - name: Apply site configuration (from site-config.yaml)
+        if: hashFiles('scripts/configure.py') != ''
+        run: python3 scripts/configure.py --noninteractive
+
+      # CI-Profil erzwingt output-dir=docs
       - name: Create CI profile (output=docs)
         run: |
           cat > _quarto-profile-ci.yml <<'YML'
@@ -43,7 +53,7 @@ jobs:
         run: |
           quarto render . --log-level=INFO
 
-      # Fallback: falls Profil ignoriert wird und nach _site/ gebaut wurde
+      # Fallback: falls Profil ignoriert wurde und nach _site/ gebaut wurde
       - name: Fallback _site -> docs
         run: |
           if [ -d "_site" ] && [ ! -f "docs/index.html" ]; then
@@ -67,3 +77,17 @@ jobs:
           git add -f docs
           git commit -m "CI: render site with alt formats (HTML+PDF+DOCX) [skip ci]" || echo "Nothing to commit"
           git push
+
+      # OPTIONAL: Source-Änderungen (durch configure.py) zurück ins Repo committen
+      # -> Nur aktivieren, wenn du möchtest, dass die ersetzten Werte dauerhaft in den Quellen landen.
+      # - name: Persist source changes (optional)
+      #   if: github.ref == 'refs/heads/main'
+      #   run: |
+      #     if ! git diff --quiet; then
+      #       git config user.name  "github-actions[bot]"
+      #       git config user.email "github-actions[bot]@users.noreply.github.com"
+      #       git add -A
+      #       git commit -m "CI: apply site-config via configure.py [skip ci]"
+      #       git push
+      #     else
+      #       echo "No source changes to commit."
