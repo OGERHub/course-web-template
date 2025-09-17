@@ -95,7 +95,7 @@
     "href": "index.html",
     "title": "{{site_title}}",
     "section": "",
-    "text": "Willkommen zur Kurs-Website {{course_code}} — {{org_name}}.\nDiese Seite nutzt Quarto. Änderbare Farben/Branding liegen in css/custom.scss. Alles weitere auf der Quarto Seite",
+    "text": "Willkommen zur Kurs-Website {{course_code}} — {{org_name}}.",
     "crumbs": [
       "FAQ",
       "Willkommen",
@@ -219,7 +219,7 @@
     "href": "base/faq.html",
     "title": "FAQ",
     "section": "",
-    "text": "WarnungWo ändere ich Branding?\n\n\n\ncss/custom.scss(Light) und optionalcss/theme-dark.scss` (Dark).\n\n\n\n\n\n\n\n\nTippWie bearbeite ich Inhalte?\n\n\n\nSeiten sind .qmd-Dateien. Änderungen committen und pushen; GitHub Actions baut die Site.\n\n\n\n\n\n\n\n\nWarnungLearn More…"
+    "text": "WarnungWo ändere ich Branding?\n\n\n\ncss/custom.scss(Light) und optionalcss/theme-dark.scss` (Dark).\n\n\n\n\n\n\n\n\nTippWie bearbeite ich Inhalte?\n\n\n\nSeiten sind .qmd-Dateien. Änderungen committen und pushen; GitHub Actions baut die Site.\n\n\n\n\n\n\n\n\nWarnungLearn More…\n\n\n\n\n\nDiese Seite nutzt Quarto. Änderbare Farben/Branding liegen in css/custom.scss. Alles weitere auf der Quarto Seite"
   },
   {
     "objectID": "base/about.html",

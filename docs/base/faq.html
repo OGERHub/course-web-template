@@ -265,7 +265,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Seiten sind <code>.qmd</code>-Dateien. Änderungen committen und pushen; GitHub Actions baut die Site.</p>
 </div>
 </div>
-<div class="callout callout-style-default callout-warning callout-empty-content callout-titled">
+<div class="callout callout-style-default callout-warning callout-titled" title="Learn More...">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
@@ -277,7 +277,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-
+<p>Diese Seite nutzt Quarto. Änderbare Farben/Branding liegen in <code>css/custom.scss</code>. Alles weitere auf der <a href="https://quarto.org/docs/websites/">Quarto Seite</a></p>
 </div>
 </div>
 </div>
@@ -391,6 +391,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (link.getAttribute("rel") === null) {
               link.setAttribute("rel", "noopener");
             }
+            // default icon
+            link.classList.add("external");
         }
       }
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
