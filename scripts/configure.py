@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Konfiguration für Quarto-Kurswebsite anwenden.
+configure.py — wendet site-config.yaml auf ein Quarto-Projekt an.
 
-- Standard: non-interactive (keine Rückfragen; bricht bei fehlenden Pflichtwerten ab)
-- Flags:
-    --interactive / -i     → fehlende Werte abfragen
-    --noninteractive / -n  → keine Rückfragen (Default)
-    --config PATH          → Pfad zu site-config.yaml (optional)
+• Default: non-interactive (keine Rückfragen; bricht bei fehlenden Pflichtwerten ab)
+• Flags:
+    --interactive / -i       fehlende Werte abfragen
+    --noninteractive / -n    keine Rückfragen (Default)
+    --config PATH            Pfad zur site-config.yaml (optional)
 
 Beispiele:
   python3 scripts/configure.py --interactive
-  python3 scripts/configure.py --noninteractive
   python3 scripts/configure.py --noninteractive --config ./site-config.yaml
 """
 
 from pathlib import Path
+from datetime import datetime
 import argparse, sys, re
 
 # ---------- CLI ----------
@@ -37,12 +37,22 @@ else:
     print("❌ _quarto.yml not found (root or ./template).")
     sys.exit(1)
 
+# ---------- logging (einfach) ----------
+LOG_PATH = ROOT / "configure.log"
+LOG = []
+
+def _log(msg: str):
+    LOG.append(msg)
+
+def _line_no_for_pos(text: str, pos: int) -> int:
+    return text.count("\n", 0, pos) + 1
+
 # ---------- config path ----------
 CFG_ROOT = ROOT / "site-config.yaml"
 CFG_ALT  = BASE / "site-config.yaml"
 CFG_PATH = Path(args.config) if args.config else (CFG_ROOT if CFG_ROOT.exists() else (CFG_ALT if CFG_ALT.exists() else CFG_ROOT))
 
-# ---------- YAML load/save (PyYAML if available, else naive) ----------
+# ---------- YAML load/save (PyYAML if verfügbar, sonst einfache Parser-Fallbacks) ----------
 def load_yaml(path: Path) -> dict:
     if not path.exists():
         return {}
@@ -113,7 +123,7 @@ def ask(label, default):
     except EOFError:
         return default
 
-def prompt_missing(cfg: dict) -> dict:
+def prompt_missing(cfg: dict):
     changed=False
     for key,label,default,required in SCHEMA:
         cur = str(cfg.get(key,"") or "").strip()
@@ -129,27 +139,36 @@ def prompt_missing(cfg: dict) -> dict:
         changed=True
     return cfg, changed
 
-# ---------- helpers for robust file edits ----------
+# ---------- helpers for robuste Dateiedits + Logging ----------
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 def write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
-def replace_entire_line(text: str, key: str, value: str) -> str:
+def replace_entire_line(text: str, key: str, value: str, file_path: Path = None) -> str:
     """
-    Ersetzt die gesamte YAML-Zeile 'key: ...' durch 'key: value' (idempotent).
-    Achtung: ersetzt alle Zeilen mit exakt diesem key (inkl. Einrückung).
+    Ersetzt die gesamte YAML-Zeile 'key: ...' durch 'key: value' (idempotent) und loggt Fundstellen.
     """
     pattern = re.compile(rf'^(\s*{re.escape(key)}:\s*).*$',
                          flags=re.M)
-    if pattern.search(text):
+    matches = list(pattern.finditer(text))
+    if matches:
+        lines = [_line_no_for_pos(text, m.start()) for m in matches]
+        _log(f"[{file_path.name if file_path else '?'}] replace_line key='{key}' → '{value}' (count={len(lines)}, lines={lines})")
         text = pattern.sub(rf'\1{value}', text)
+    else:
+        _log(f"[{file_path.name if file_path else '?'}] replace_line key='{key}' → keine Fundstelle")
     return text
 
-def simple_replace(text: str, pairs: dict) -> str:
+def simple_replace(text: str, pairs: dict, file_path: Path = None) -> str:
     for old, new in pairs.items():
-        text = text.replace(old, new)
+        cnt = text.count(old)
+        if cnt:
+            _log(f"[{file_path.name if file_path else '?'}] simple_replace '{old}' → '{new}' (count={cnt})")
+            text = text.replace(old, new)
+        else:
+            _log(f"[{file_path.name if file_path else '?'}] simple_replace '{old}' → keine Fundstelle")
     return text
 
 def set_light_brand_line(text: str, use_brand: bool) -> str:
@@ -170,9 +189,6 @@ def set_light_brand_line(text: str, use_brand: bool) -> str:
 def set_dark_line(text: str, use_brand: bool, dark_on: bool) -> str:
     """
     Setzt/ersetzt die dark-Zeile passend zu Branding+Schalter.
-    - Branding AN & dark_on → [lumen, css/theme-dark.scss, css/custom.scss]
-    - Branding AUS & dark_on → lumen
-    - dark AUS → kommentierte Zeile (lumen oder Stack)
     """
     if dark_on and use_brand:
         dark_line = '      dark:  [lumen, css/theme-dark.scss, css/custom.scss]'
@@ -183,15 +199,13 @@ def set_dark_line(text: str, use_brand: bool, dark_on: bool) -> str:
 
     # Platzhalter ersetzen
     if "__DARK_THEME_LINE__" in text or "# __DARK_THEME_LINE__" in text:
-        text = text.replace("__DARK_THEME_LINE__", dark_line)
-        text = text.replace("# __DARK_THEME_LINE__", dark_line)
-        return text
+        return text.replace("__DARK_THEME_LINE__", dark_line).replace("# __DARK_THEME_LINE__", dark_line)
 
     # Existierende dark-Zeile (Stack oder lumen; kommentiert oder nicht) ersetzen
-    text2 = re.sub(r'^\s*#?\s*dark:\s*\[.*?\]\s*$', dark_line, text, flags=re.M)
-    text2 = re.sub(r'^\s*#?\s*dark:\s*lumen\s*$', dark_line, text2, flags=re.M)
-    if text2 != text:
-        return text2
+    t2 = re.sub(r'^\s*#?\s*dark:\s*\[.*?\]\s*$', dark_line, text, flags=re.M)
+    t2 = re.sub(r'^\s*#?\s*dark:\s*lumen\s*$', dark_line, t2, flags=re.M)
+    if t2 != text:
+        return t2
 
     # Falls keine dark-Zeile existiert: unter 'light:' einfügen
     m = re.search(r'(^\s*light:.*$)', text, flags=re.M)
@@ -215,75 +229,96 @@ def update_quarto_yaml(base: Path, v: dict):
     # 2) Dark-Theme je nach Branding + Schalter
     yml = set_dark_line(yml, USE_BRAND, DARK_ON)
 
-    # 3) Idempotente Zeilenersetzungen
-    yml = replace_entire_line(yml, "title", f'"{v["site_title"]}"')
-    yml = replace_entire_line(yml, "site-url", v["site_url"])
-    yml = replace_entire_line(yml, "repo-url", v["repo_url"])
-    yml = replace_entire_line(yml, "logo", v["logo_path"])
-    yml = replace_entire_line(yml, "text", v["portal_text"])
-    yml = replace_entire_line(yml, "href", v["portal_url"])
+    # 3) Idempotente Zeilenersetzungen + Logging
+    yml = replace_entire_line(yml, "title", f'"{v["site_title"]}"', yml_path)
+    yml = replace_entire_line(yml, "site-url", v["site_url"], yml_path)
+    yml = replace_entire_line(yml, "repo-url", v["repo_url"], yml_path)
+    yml = replace_entire_line(yml, "logo", v["logo_path"], yml_path)
+    yml = replace_entire_line(yml, "text", v["portal_text"], yml_path)
+    yml = replace_entire_line(yml, "href", v["portal_url"], yml_path)
 
     # 4) Footer: Org-Name + Impressum-Link robust
     yml = simple_replace(yml, {
         'your organisation (<span class="year"></span>) —':
             f'{v["org_name"]} (<span class="year"></span>) —',
-    })
+    }, yml_path)
+
     href_cfg = (v.get("impressum_href", "#") or "#").strip()
     href_cfg = re.sub(r'\.(qmd|md)$', '.html', href_cfg, flags=re.I)  # .qmd/.md → .html für Footer-HTML
+    before = yml
     yml = re.sub(r'(<a[^>]*class="impressum-link"[^>]*href=")[^"]*(")',
                  rf'\1{href_cfg}\2', yml, flags=re.I)
+    if yml != before:
+        _log(f"[{yml_path.name}] regex_replace impressum-link → '{href_cfg}'")
+    else:
+        _log(f"[{yml_path.name}] impressum-link nicht gefunden (keine Änderung)")
 
     write_text(yml_path, yml)
 
 def update_scss(base: Path, v: dict):
     # Branding leer → keine SCSS-Anpassung
     if not (v.get("brand_hex") or "").strip():
+        _log("[custom.scss/theme-dark.scss] Branding leer → keine Änderungen")
         return
+
     css = base / "css" / "custom.scss"
     if css.exists():
         t = read_text(css)
-        t = simple_replace(t, {
+        t2 = simple_replace(t, {
             '$brand: #FB7171;': f'$brand: {v["brand_hex"]};',
             '$brand-font: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;':
                 f'$brand-font: {v["brand_font"]};',
-        })
-        write_text(css, t)
+        }, css)
+        if t2 != t:
+            write_text(css, t2)
 
     tdark = base / "css" / "theme-dark.scss"
     if tdark.exists():
         t = read_text(tdark)
         brand_dark = v["brand_hex_dark"] if (v.get("brand_hex_dark") or "").strip() else v.get("brand_hex","")
         if not brand_dark:
-            # falls beides leer, nichts tun
+            _log("[theme-dark.scss] Dark-Brand leer → keine Änderungen")
             return
-        t = simple_replace(t, {
+        t2 = simple_replace(t, {
             '$brand: #FB7171;': f'$brand: {brand_dark};',
             '$brand-font: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;':
                 f'$brand-font: {v["brand_font"]};',
-        })
-        write_text(tdark, t)
+        }, tdark)
+        if t2 != t:
+            write_text(tdark, t2)
 
 def update_impressum(base: Path, v: dict):
     imp = base / "base" / "impressum.qmd"
     if not imp.exists():
         return
-    t = read_text(imp)
+    t = read_text(imp); before = t
     for k in ["responsible_name","responsible_address","responsible_email","imprint_url",
               "uni_name","uni_url","institute_name","institute_url","chair_name","chair_url"]:
         t = t.replace(f"{{{{{k}}}}}", str(v.get(k,"")))
-    write_text(imp, t)
+    if t != before:
+        write_text(imp, t)
+        _log("[impressum.qmd] placeholders aktualisiert")
+    else:
+        _log("[impressum.qmd] keine placeholders gefunden/geändert")
 
 def update_qmd_placeholders(base: Path, v: dict):
     keys = ["site_title","org_name","course_code","contact_email"]
     repl = {f"{{{{{k}}}}}": str(v.get(k,"")) for k in keys}
+    changed = 0
     for path in base.rglob("*.qmd"):
         t = read_text(path); orig = t
         for old,new in repl.items():
             t = t.replace(old, new)
         if t != orig:
             write_text(path, t)
+            _log(f"[{path.relative_to(BASE)}] placeholders aktualisiert")
+            changed += 1
+    if not changed:
+        _log("[*.qmd] keine placeholders geändert")
 
 def main():
+    _log(f"=== configure.py run @ {datetime.now().isoformat(timespec='seconds')} ===")
+
     # 1) Konfig laden / fehlende ggf. abfragen
     cfg = load_yaml(CFG_PATH)
     cfg, changed = prompt_missing(cfg)
@@ -294,7 +329,7 @@ def main():
 
     if changed or not CFG_PATH.exists():
         dump_yaml(CFG_PATH, cfg)
-        print(f"📝 saved config -> {CFG_PATH}")
+        _log(f"save config → {CFG_PATH}")
 
     # 2) Updates anwenden
     update_quarto_yaml(BASE, cfg)
@@ -302,11 +337,15 @@ def main():
     update_impressum(BASE, cfg)
     update_qmd_placeholders(BASE, cfg)
 
-    # 3) .nojekyll optional
+    # 3) .nojekyll optional (nur falls docs/ bereits existiert)
     docs = ROOT / "docs"
     if docs.exists():
         (docs / ".nojekyll").write_text("", encoding="utf-8")
+        _log("ensure docs/.nojekyll")
 
+    # 4) Log schreiben (liegt im Repo-Root; wird nicht veröffentlicht)
+    LOG_PATH.write_text("\n".join(LOG) + "\n", encoding="utf-8")
+    print(f"🧾 Log geschrieben nach: {LOG_PATH}")
     print("✅ configuration applied. Commit & push to build on CI.")
 
 if __name__=="__main__":

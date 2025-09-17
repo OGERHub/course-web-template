@@ -3,3 +3,4 @@ site-config.yaml
 scripts/
 README.md          # wenn du es nicht als Seite ausliefern willst
 LICENSE
+configure.log

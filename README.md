@@ -16,7 +16,10 @@ Ein Blick auf die [Demo Seite](https://ogerhub.github.io/course-web-template/) z
     -   `site-config.yaml` ausfüllen **und**
     -   `python3 scripts/configure.py` ausführen (fragt nur fehlende Felder)
 
-3.  **Pushen** → GitHub Actions baut → **Pages** veröffentlicht aus `docs/`.
+3.  **Pushen** → GitHub Actions baut → **Pages** veröffentlicht aus `docs/` .
+
+    -   **Settings → Pages** *Build and deployment* → **Deploy from a branch** **Branch:** `main` • **Folder:** `/docs`
+    -   **Settings → Actions → General** *Workflow permissions* → **Read and write permissions**
 
 ------------------------------------------------------------------------
 
@@ -57,13 +60,11 @@ quarto use template ORG/REPO
 
 ### Konfiguration anwenden (eine Variante wählen)
 
-
-Im Repo befindet sich die **`site-config.yaml`** (in Ruhe ausfüllen). Dann das Config-Skript **`scripts/configure.py]`** (setzt Werte in Projektdateien) aufrufen.
-Falls Interaktiv gewählt wird werden alle Felder abgefragt.
+Im Repo befindet sich die **`site-config.yaml`** (in Ruhe ausfüllen). Dann das Config-Skript **`scripts/configure.py]`** (setzt Werte in Projektdateien) aufrufen. Falls Interaktiv gewählt wird werden alle Felder abgefragt.
 
 #### Python
 
-```bash
+``` bash
 # Python (Default: non-interactive)
 python3 scripts/configure.py
 # interaktiv:
@@ -71,8 +72,6 @@ python3 scripts/configure.py --interactive
 # explizite Config-Datei:
 python3 scripts/configure.py --noninteractive --config ./site-config.yaml
 ```
-
-
 
 **Wichtige Felder (Beispiele):**
 
@@ -130,7 +129,6 @@ https://<USER>.github.io/<REPO>/
 
 -   Konfiguration erneut anwenden: `python3 scripts/configure.py`
 
-
 ## Fehlerbehebung
 
 -   **404**: Pages auf *Deploy from a branch* (`main`/`docs`) stellen; existiert `docs/index.html`? `site_url` exakt?
@@ -138,7 +136,7 @@ https://<USER>.github.io/<REPO>/
 -   **Workflow kann nicht pushen**: *Read & write permissions* setzen; bei strenger Orga ggf. PAT-Secret `GH_PAT` im Push-Step nutzen.
 -   **Alles in `./template/` gelandet**: beim `quarto use` „Create subdirectory?“ mit **`n`** antworten – oder Inhalte aus `template/` eine Ebene hoch verschieben.
 
-## Grundstruktur 
+## Grundstruktur
 
 ```         
 .
