@@ -253,7 +253,6 @@ ul.task-list li input[type="checkbox"] {
 </style>
 <p><img src="images/banner.png" class="img-fluid"></p>
 <p>Willkommen zur Kurs-Website <strong>{{course_code}}</strong> — {{org_name}}.</p>
-<p>Diese Seite nutzt Quarto. Änderbare Farben/Branding liegen in <code>css/custom.scss</code>. Alles weitere auf der <a href="https://quarto.org/docs/websites/">Quarto Seite</a></p>
 
 
 
@@ -364,6 +363,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (link.getAttribute("rel") === null) {
               link.setAttribute("rel", "noopener");
             }
+            // default icon
+            link.classList.add("external");
         }
       }
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
