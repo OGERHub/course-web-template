@@ -316,6 +316,65 @@ def set_link_external_filter_line(text: str, site_url: str, file_path: Path | No
     _log(f"[{fn}] link-external-filter angehängt → {wanted_val}")
     return text
 
+# ---------- Navbar-right gezielt aktualisieren (keine leeren Werte) ----------
+def _yaml_quote(s: str) -> str:
+    s = "" if s is None else str(s)
+    return '"' + s.replace('"', '\\"') + '"'
+
+def update_nav_right(text: str, portal_text: str | None, portal_url: str | None, file_path: Path | None = None) -> str:
+    """
+    Ersetzt NUR im navbar.right den ersten Eintrag 'text:' und 'href:'.
+    - Nur ersetzen, wenn portal_text/portal_url nicht leer sind.
+    - Idempotent: max. 1x pro Feld.
+    - Lässt left:/weitere Einträge unangetastet.
+    """
+    fn = file_path.name if file_path else "?"
+    m_right = re.search(r'^(\s*)right:\s*\n((?:^\1\s{2,}.*\n)*)', text, flags=re.M)
+    if not m_right:
+        _log(f"[{fn}] navbar.right nicht gefunden → übersprungen")
+        return text
+
+    indent = m_right.group(1)
+    body   = m_right.group(2) or ""
+
+    def _replace_field(body: str, field: str, value: str) -> tuple[str, bool]:
+        pat = re.compile(rf'^(\s*{re.escape(field)}:\s*).*$',
+                         flags=re.M)
+        m = pat.search(body)
+        if not m:
+            return body, False
+        before = body[:m.start()]
+        after  = body[m.end():]
+        new_line = m.group(1) + value
+        return before + new_line + after, True
+
+    changed_any = False
+
+    if portal_text and portal_text.strip():
+        q = _yaml_quote(portal_text.strip())
+        body2, changed = _replace_field(body, 'text', q)
+        if changed:
+            _log(f"[{fn}] navbar.right → text: {q}")
+            body = body2
+            changed_any = True
+        else:
+            _log(f"[{fn}] navbar.right → text: Feld nicht gefunden")
+
+    if portal_url and portal_url.strip():
+        q = _yaml_quote(portal_url.strip())
+        body2, changed = _replace_field(body, 'href', q)
+        if changed:
+            _log(f"[{fn}] navbar.right → href: {q}")
+            body = body2
+            changed_any = True
+        else:
+            _log(f"[{fn}] navbar.right → href: Feld nicht gefunden")
+
+    if not changed_any:
+        return text
+
+    return text[:m_right.start(2)] + body + text[m_right.end(2):]
+
 # ---------- updates ----------
 def update_quarto_yaml(base: Path, v: dict):
     yml_path = base / "_quarto.yml"
@@ -332,15 +391,16 @@ def update_quarto_yaml(base: Path, v: dict):
     # 2) Dark-Theme je nach Branding + Schalter (duplikatsicher)
     yml = set_dark_line(yml, USE_BRAND, DARK_ON)
 
-    # 3) Idempotente Zeilenersetzungen + Logging
+    # 3) Idempotente Zeilenersetzungen + Logging (nur wirklich globale Felder)
     yml = replace_entire_line(yml, "title", f'"{v["site_title"]}"', yml_path)
     yml = replace_entire_line(yml, "site-url", v["site_url"], yml_path)
     yml = replace_entire_line(yml, "repo-url", v["repo_url"], yml_path)
     yml = replace_entire_line(yml, "logo", v["logo_path"], yml_path)
-    yml = replace_entire_line(yml, "text", v["portal_text"], yml_path)
-    yml = replace_entire_line(yml, "href", v["portal_url"], yml_path)
 
-    # 4) Footer: Org-Name + Impressum-Link robust
+    # 4) Navbar.right gezielt (verhindert leere text:/href:)
+    yml = update_nav_right(yml, v.get("portal_text",""), v.get("portal_url",""), yml_path)
+
+    # 5) Footer: Org-Name + Impressum-Link robust
     yml = simple_replace(yml, {
         'your organisation (<span class="year"></span>) —':
             f'{v["org_name"]} (<span class="year"></span>) —',
@@ -356,7 +416,7 @@ def update_quarto_yaml(base: Path, v: dict):
     else:
         _log(f"[{yml_path.name}] impressum-link nicht gefunden (keine Änderung)")
 
-    # 5) Eigene Domain whitelisten
+    # 6) Eigene Domain whitelisten
     yml = set_link_external_filter_line(yml, v.get("site_url",""), yml_path)
 
     write_text(yml_path, yml)
